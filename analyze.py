@@ -3,7 +3,7 @@
 # Failed attempt to extract main sines from a wav file and retranscript
 # it to Sonic Pi.
 #
-# This kind-of work (i.e: we recognize the sound), but it's far from usable
+# This kind-of works (i.e: we recognize the sound), but it's far from usable
 
 import sys
 import math

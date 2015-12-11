@@ -9,6 +9,7 @@ from collections import OrderedDict
 
 NB_OCTAVES = 10
 TOP_NOTES = 16
+NB_POINTS = 50
 BASE_NOTES_HZ = [
     ('C', 16.352),
     ('Cs', 17.324),
@@ -36,50 +37,60 @@ def analyze(input):
     analyzed = {}
     rate, snd = wavfile.read(input)
     snd = snd / (2. ** 15)
-    chan = snd[:, 0]
+    entire_chan = snd[:, 0]
 
     analyzed['duration'] = snd.shape[0] / rate
 
-    nb_samples = len(chan)
-    transform = np.abs(np.fft.fft(chan))
-    freqs = np.fft.fftfreq(nb_samples) * nb_samples * (1.0 / (nb_samples * (1.0 / rate)))
+    entire_nb_samples = len(entire_chan)
+    nb_samples = entire_nb_samples / NB_POINTS
 
-    # compute notes we want to watch
-    notes = []
-    for i in range(1, NB_OCTAVES):
-        for label, freq in BASE_NOTES_HZ:
-            notes.append(('{0}{1}'.format(label, i), i * freq))
+    # we split the sample into N chunks which we'll analyze (N is the
+    # number of points we want.)
+    
+    point = 0
+    while point < entire_nb_samples:
+        chan = entire_chan[point:(point + nb_samples)]
 
-    # compute ranges we want to analyze
-    franges = []
-    prev = None
-    for label, freq in notes:
-        if prev:
-            half = abs((freq - prev) / 2.0)
-            franges.append((label, (freq - half, freq + half)))
-        prev = freq
+        transform = np.abs(np.fft.fft(chan))
+        freqs = np.fft.fftfreq(int(nb_samples)) * nb_samples * (1.0 / (nb_samples * (1.0 / rate)))
 
-    # let's fetch amplitudes, aggregated by note
-    namps = {}
-    idx = 0
-    for freq in freqs:
-        for frange in franges:
-            start, end = frange[1]
-            if freq >= start and freq <= end:
-                label = frange[0]
-                if label not in namps:
-                    namps[label] = []
-                namps[label].append(np.abs(transform[idx]))
-        idx += 1
+        # compute notes we want to watch
+        notes = []
+        for i in range(1, NB_OCTAVES):
+            for label, freq in BASE_NOTES_HZ:
+                notes.append(('{0}{1}'.format(label, i), i * freq))
 
-    # now compute avg for each note
-    npower = OrderedDict()
-    for label, amp in namps.items():
-        npower[label] = np.mean(amp)
-    snpower = sorted(npower.items(), key=lambda tup: tup[1], reverse=True)
-    analyzed['top'] = snpower[0:TOP_NOTES]
+        # compute ranges we want to analyze
+        franges = []
+        prev = None
+        for label, freq in notes:
+            if prev:
+                half = abs((freq - prev) / 2.0)
+                franges.append((label, (freq - half, freq + half)))
+            prev = freq
 
-    dump(analyzed)
+        # let's fetch amplitudes, aggregated by note
+        namps = {}
+        idx = 0
+        for freq in freqs:
+            for frange in franges:
+                start, end = frange[1]
+                if freq >= start and freq <= end:
+                    label = frange[0]
+                    if label not in namps:
+                        namps[label] = []
+                    namps[label].append(np.abs(transform[idx]))
+            idx += 1
+
+        # now compute avg for each note
+        npower = OrderedDict()
+        for label, amp in namps.items():
+            npower[label] = np.mean(amp)
+        snpower = sorted(npower.items(), key=lambda tup: tup[1], reverse=True)
+
+        print(snpower[0:TOP_NOTES])
+
+        point += nb_samples
 
 if __name__ == '__main__':
     if len(sys.argv) == 2:

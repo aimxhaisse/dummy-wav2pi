@@ -56,4 +56,25 @@ synth :sine, note: :Cs3, sustain_level: 0.1045601094031212, sustain: 1, release:
 synth :sine, note: :C4, sustain_level: 0.09797386150420792, sustain: 1, release: 0
 synth :sine, note: :Cs4, sustain_level: 0.09383684139146167, sustain: 1, release: 0
 synth :sine, note: :Fs3, sustain_level: 0.09369225457884, sustain: 1, release: 0
+synth :sine, note: :E4, sustain_level: 0.08069658711809073, sustain: 1, release: 0
+synth :sine, note: :A3, sustain_level: 0.07867632226422419, sustain: 1, release: 0
+sleep 1
+
+synth :sine, note: :D3, sustain_level: 0.32273524546551635, sustain: 1, release: 0
+synth :sine, note: :E4, sustain_level: 0.07950812798309631, sustain: 1, release: 0
+synth :sine, note: :A3, sustain_level: 0.07874371233791837, sustain: 1, release: 0
+synth :sine, note: :Cs3, sustain_level: 0.06621190017568879, sustain: 1, release: 0
+synth :sine, note: :C4, sustain_level: 0.06429463275941298, sustain: 1, release: 0
+synth :sine, note: :Cs4, sustain_level: 0.0534834266990118, sustain: 1, release: 0
+synth :sine, note: :Fs3, sustain_level: 0.05340101772104722, sustain: 1, release: 0
+sleep 1
+
+synth :sine, note: :D3, sustain_level: 0.20701318823252285, sustain: 1, release: 0
+synth :sine, note: :E4, sustain_level: 0.0775404132088581, sustain: 1, release: 0
+synth :sine, note: :A3, sustain_level: 0.07684264229425701, sustain: 1, release: 0
+synth :sine, note: :Cs4, sustain_level: 0.04712526567358938, sustain: 1, release: 0
+synth :sine, note: :Fs3, sustain_level: 0.04705265355390743, sustain: 1, release: 0
+synth :sine, note: :C4, sustain_level: 0.0447259427719438, sustain: 1, release: 0
+synth :sine, note: :Cs3, sustain_level: 0.035952167479207084, sustain: 1, release: 0
+sleep 1
 ```
